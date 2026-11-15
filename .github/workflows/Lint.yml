@@ -19,7 +19,7 @@ jobs:
       - name: install Linter
         run: pip install ruff
 
-        #This step will run the linter...
+        # Step 3: Run the linter
       - name: Check files for linting
         run: ruff check .
         
