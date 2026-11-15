@@ -1,4 +1,5 @@
 #This code os written by me..
+#This file is written with .py extention...
 from flask import Flask, render_template
 app = Flask(__name__)
 
