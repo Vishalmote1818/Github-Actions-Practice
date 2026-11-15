@@ -8,25 +8,28 @@ jobs:
      runs-on: ubuntu-latest
      steps:
         - name: clone the code
-          run: echo "cloning the code"
+          run: echo "cloning the code..."
   
   build:
+    needs: [code]
     runs-on: ubuntu-latest
     steps:
       - name: Build the Docker
-        run: echo "Building using docker"
+        run: echo "Building using docker..."
       
   test:
+    needs: [build]
     runs-on: ubuntu-latest
     steps:
       - name: Testing the Code
-        run: echo "Testing the App.."
+        run: echo "Testing the App..."
       
   
   diploy:
+    needs: [build,test]
     runs-on: ubuntu-latest
     steps:
       - name: Diploying the App
-        run: echo "App Deployment is in Progress.."
+        run: echo "App Deployment is in Progress..."
 
       
