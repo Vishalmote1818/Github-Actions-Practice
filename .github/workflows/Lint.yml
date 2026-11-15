@@ -1,0 +1,18 @@
+# What is the goal of workflow
+#Goal: Whenever someone changes the python code the linter will check if the syntax, format, indentation (Linting) is correct or not..
+
+name: Auto Linter
+
+on:
+  push:
+    paths: "*.py"
+
+jobs:
+  code:
+    runs-on: ubuntu-latest
+    #This step will automatically clone the code of the brach into runnner..
+    steps:
+      - name: Checkout/Clone the code
+        uses: actions/checkout/@v7
+        
+    
