@@ -1,0 +1,18 @@
+# I have to do  SAST for my code...
+
+name: Code Quality
+
+#uses: .github/workflows/code-quality
+
+
+on:
+  workflow_call: # You can call this workflow before or after any workflow..
+
+jobs:
+  sast:
+    runs-on: ubuntu-latest
+    steps:
+      - name: code checkout
+        uses: actions/checkout@v7
+
+      - name: 
