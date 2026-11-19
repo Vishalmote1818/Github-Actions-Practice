@@ -1,18 +1,31 @@
-# I have to do  SAST for my code...
-
-name: Code Quality
-
-#uses: .github/workflows/code-quality
-
+name: Code Quality - SAST
 
 on:
-  workflow_call: # You can call this workflow before or after any workflow..
+  workflow_call:
 
 jobs:
   sast:
     runs-on: ubuntu-latest
+
     steps:
-      - name: code checkout
+
+      # Step 1: Checkout Source Code
+      - name: Code Checkout
         uses: actions/checkout@v7
 
-      - name: 
+      # Step 2: Setup Python
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      # Step 3: Install Semgrep
+      - name: Install Semgrep
+        run: |
+          python -m pip install --upgrade pip
+          pip install semgrep
+
+      # Step 4: Run SAST Scan
+      - name: Run SAST using Semgrep
+        run: |
+          semgrep scan --config auto --error .
