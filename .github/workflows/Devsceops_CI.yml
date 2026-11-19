@@ -1,0 +1,89 @@
+# Goal is to run end to end Devsecops CI Pipeline
+
+# Goal: Run end-to-end DevSecOps CI Pipeline
+
+name: DevSecOps CI Pipeline
+
+on:
+  push:
+    branches: [main]
+
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+
+  # 1. SAST - Static Application Security Testing
+  sast:
+    name: SAST - Semgrep
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.x'
+
+      - name: Install Semgrep
+        run: pip install semgrep
+
+      - name: Run SAST Scan
+        run: semgrep scan --config auto --error .
+
+
+  # 2. Secret Scanning
+  secret-scan:
+    name: Secret Scanning - Gitleaks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
+  # 3. Dependency Scanning
+  dependency-scan:
+    name: Dependency Scan - Trivy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v7
+
+      - name: Run Dependency Scan
+        uses: aquasecurity/trivy-action@0.33.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: '1'
+
+
+  # 4. Security Gate
+  security-gate:
+    name: DevSecOps Security Gate
+    runs-on: ubuntu-latest
+
+    needs:
+      - sast
+      - secret-scan
+      - dependency-scan
+
+    steps:
+      - name: Security Validation
+        run: echo "All security scans passed successfully!"
