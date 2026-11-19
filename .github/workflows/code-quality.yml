@@ -1,3 +1,4 @@
+#Code Quality: SASST
 name: Code Quality - SAST
 
 on:
